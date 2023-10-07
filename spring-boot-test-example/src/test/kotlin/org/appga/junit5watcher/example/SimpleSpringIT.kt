@@ -2,7 +2,6 @@ package org.appga.junit5watcher.example
 
 import mu.KotlinLogging
 import org.appga.junit5watcher.BenchmarkExtension
-import org.appga.junit5watcher.RunOnce
 import org.appga.junit5watcher.example.extensions.OtherBenchmarkExtension
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.extension.ExtendWith
