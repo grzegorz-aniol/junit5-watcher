@@ -6,6 +6,8 @@ This extension lets you measure not only the cumulative time of your test classe
 
 ## How to use the extension
 
+Extension requires JDK 17.
+
 You have to define Maven or Gradle new dependencies (in `test` scope).
 
 Maven dependencies:
@@ -17,16 +19,19 @@ Maven dependencies:
     <scope>test</scope>
 </dependency>
 ```
+
+Extension is compiled with Kotlin 1.9. If your project uses directly or indirectly Kotlin 1.6.x or older already, you may need to update to at least 1.8.x. In that case please update kotlin-stdlib:
+
 ```xml
 <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-api</artifactId>
-    <version>2.0.9</version>
+    <groupId>org.jetbrains.kotlin</groupId>
+    <artifactId>kotlin-stdlib</artifactId>
+    <version>1.8.20</version>
     <scope>test</scope>
 </dependency>
 ```
 
-The extension can be used in your project in one of two standard JUnit5 methods.
+The extension can be used in your project in one of two methods provided by JUnit5.
 
 ### Automatic usage
 Watcher Extension can be automatically launched in your test suite by running it with Java property `-Djunit.jupiter.extensions.autodetection.enabled=true`
