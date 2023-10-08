@@ -6,6 +6,8 @@ This extension lets you measure not only the cumulative time of your test classe
 
 ## How to use the extension
 
+### Dependencies
+
 Extension requires JDK 17.
 
 You have to define Maven or Gradle new dependencies (in `test` scope).
