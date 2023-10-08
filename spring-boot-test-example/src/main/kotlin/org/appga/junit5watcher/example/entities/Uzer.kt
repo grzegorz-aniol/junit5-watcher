@@ -13,5 +13,5 @@ class Uzer (
     var name: String,
 
     @Column
-    var year: Int
+    var failedLoginCount: Int
 )

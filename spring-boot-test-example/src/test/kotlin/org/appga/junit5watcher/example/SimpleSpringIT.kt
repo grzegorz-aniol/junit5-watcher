@@ -50,16 +50,4 @@ internal class SimpleSpringIT {
         Thread.sleep(1000)
     }
 
-    @Test
-    fun `test method 2`() {
-        log.info { "Test 2" }
-        Thread.sleep(1000)
-    }
-
-    @Test
-    fun `test method 3`() {
-        log.info { "Test 3" }
-        Thread.sleep(1000)
-    }
-
 }

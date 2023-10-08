@@ -10,19 +10,12 @@
 
     <artifactId>spring-boot-test-example</artifactId>
 
-
-    <repositories>
-        <repository>
-            <id>mavenCentral</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>${groupId}</groupId>
             <artifactId>junit5-watcher-ext</artifactId>
             <version>${version}</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>io.github.microutils</groupId>

@@ -7,7 +7,7 @@ import kotlin.time.DurationUnit
 
 class CsvReportWriter(private val file: File) : ReportWriter {
 
-    private val columnsOrdered = MetricType.values().toList()
+    private val columnsOrdered = MetricType.entries
 
     private fun getMetricTypeLabel(metricType: MetricType): String =
         when (metricType) {
