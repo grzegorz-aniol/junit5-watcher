@@ -24,7 +24,7 @@ internal class BeforeEachTest {
 
     companion object {
         @JvmStatic
-        @AfterAll
+        @TestFinalization
         fun validateResults(metrics: Metrics, testClassCounters: TestClassCounters) {
             val className = BeforeEachTest::class.qualifiedName!!
             val classMetrics = metrics.getResults().first { it.first == className }.second

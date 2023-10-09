@@ -22,7 +22,7 @@ internal class BeforeAllTest {
             Thread.sleep(100)
         }
 
-        @AfterAll
+        @TestFinalization
         @JvmStatic
         fun validateResults(metrics: Metrics, testClassCounters: TestClassCounters) {
             val className = BeforeAllTest::class.qualifiedName!!

@@ -26,8 +26,9 @@ internal class RegularTestsTest {
     }
 
     companion object {
+
+        @TestFinalization
         @JvmStatic
-        @AfterAll
         fun validateResults(metrics: Metrics, testClassCounters: TestClassCounters) {
             val className = RegularTestsTest::class.qualifiedName!!
             val classMetrics = metrics.getResults().first { it.first == className }.second
