@@ -1,6 +1,6 @@
 package org.appga.junit5watcher.example.services
 
-import mu.KotlinLogging
+import mu.two.KotlinLogging
 import org.springframework.stereotype.Service
 
 @Service

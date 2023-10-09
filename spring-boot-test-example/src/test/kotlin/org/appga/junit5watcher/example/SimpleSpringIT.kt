@@ -1,9 +1,13 @@
 package org.appga.junit5watcher.example
 
-import mu.KotlinLogging
+import mu.two.KotlinLogging
 import org.appga.junit5watcher.BenchmarkExtension
 import org.appga.junit5watcher.example.extensions.OtherBenchmarkExtension
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.TestExecutionListeners

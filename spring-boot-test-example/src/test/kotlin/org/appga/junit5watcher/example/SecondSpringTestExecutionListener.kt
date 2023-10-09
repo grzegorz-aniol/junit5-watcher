@@ -1,6 +1,6 @@
 package org.appga.junit5watcher.example
 
-import mu.KotlinLogging
+import mu.two.KotlinLogging
 import org.springframework.test.context.TestContext
 import org.springframework.test.context.TestExecutionListener
 

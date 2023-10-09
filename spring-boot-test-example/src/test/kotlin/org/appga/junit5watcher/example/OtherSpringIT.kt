@@ -1,6 +1,6 @@
 package org.appga.junit5watcher.example
 
-import mu.KotlinLogging
+import mu.two.KotlinLogging
 import org.appga.junit5watcher.BenchmarkExtension
 import org.appga.junit5watcher.example.extensions.OtherBenchmarkExtension
 import org.junit.jupiter.api.AfterAll
