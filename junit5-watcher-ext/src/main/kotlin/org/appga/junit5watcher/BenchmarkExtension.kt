@@ -1,6 +1,7 @@
 package org.appga.junit5watcher
 
 import java.io.File
+import java.util.concurrent.atomic.AtomicLong
 import org.junit.jupiter.api.extension.AfterAllCallback
 import org.junit.jupiter.api.extension.AfterEachCallback
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback
@@ -12,6 +13,13 @@ import org.slf4j.LoggerFactory
 import kotlin.time.Duration
 import kotlin.time.TimeSource
 
+internal enum class MarkType { BEFORE_ALL, BEFORE_EACH, BEFORE_TEST, AFTER_TEST, AFTER_EACH, AFTER_ALL }
+
+internal data class TestClassCounters(
+    val timeMarks: HashMap<MarkType, TimeSource.Monotonic.ValueTimeMark> = HashMap(),
+    val testCounter: AtomicLong = AtomicLong(0L)
+)
+
 class BenchmarkExtension : BeforeAllCallback, BeforeEachCallback, AfterAllCallback, AfterEachCallback,
     BeforeTestExecutionCallback, AfterTestExecutionCallback {
 
@@ -20,9 +28,8 @@ class BenchmarkExtension : BeforeAllCallback, BeforeEachCallback, AfterAllCallba
     }
 
     private val log = LoggerFactory.getLogger(BenchmarkExtension::class.java)
-    private enum class MarkType { BEFORE_ALL, BEFORE_EACH, BEFORE_TEST, AFTER_TEST, AFTER_EACH, AFTER_ALL }
     private val timeSource = TimeSource.Monotonic
-    private val contextNamespace = ExtensionContext.Namespace.create(BenchmarkExtension::class.java, "metrics")
+    private val contextNamespace = ExtensionContext.Namespace.create(BenchmarkExtension::class.java)
 
     override fun beforeAll(extensionContext: ExtensionContext) {
         log.debug { "Test ${extensionContext.testClass.get().name} - before all" }
@@ -30,7 +37,7 @@ class BenchmarkExtension : BeforeAllCallback, BeforeEachCallback, AfterAllCallba
             registerShutdownHook(extensionContext)
             isShutdownHookInitialized = true
         }
-        clearAllTimeMarks(extensionContext)
+        storeTestClassCounters(extensionContext) // store all counters in test class context
         setTimeMark(extensionContext, MarkType.BEFORE_ALL, timeSource.markNow())
     }
 
@@ -88,34 +95,38 @@ class BenchmarkExtension : BeforeAllCallback, BeforeEachCallback, AfterAllCallba
     private fun getOrCreateMetrics(context: ExtensionContext): Metrics {
         // metric object is always stored in root context
         val store = context.root.getStore(contextNamespace)
-        return store.getOrComputeIfAbsent("metrics", { Metrics() }, Metrics::class.java)
+        return store.getOrComputeIfAbsent(Metrics::class.java, { Metrics() }, Metrics::class.java)
+    }
+
+    private fun getTestClassCounters(context: ExtensionContext): TestClassCounters {
+        val store = context.getStore(contextNamespace)
+        return store.get(TestClassCounters::class.java) as? TestClassCounters
+            ?: throw RuntimeException("Cannot find time marks")
+    }
+
+    private fun storeTestClassCounters(context: ExtensionContext) {
+        val store = context.getStore(contextNamespace)
+        store.put(TestClassCounters::class.java, TestClassCounters())
     }
 
     private fun getTimeMark(context: ExtensionContext, markType: MarkType): TimeSource.Monotonic.ValueTimeMark {
-        val store = context.getStore(contextNamespace)
-        return store.get(markType) as? TimeSource.Monotonic.ValueTimeMark
+        val testClassCounters = getTestClassCounters(context)
+        return testClassCounters.timeMarks[markType]
             ?: throw RuntimeException("Cannot find time mark for type $markType")
     }
 
     private fun setTimeMark(context: ExtensionContext, markType: MarkType, timeMark: TimeSource.Monotonic.ValueTimeMark) {
-        val store = context.getStore(contextNamespace)
-        store.put(markType, timeMark)
-    }
-
-    private fun clearAllTimeMarks(context: ExtensionContext) {
-        val store = context.getStore(contextNamespace)
-        MarkType.values().forEach { store.remove(it) }
+        val testClassCounters = getTestClassCounters(context)
+        testClassCounters.timeMarks[markType] = timeMark
     }
 
     private fun getAndIncTestCounter(context: ExtensionContext): Long  {
-        val store = context.getStore(contextNamespace)
-        val value = store.getOrDefault("testCounter", Long::class.java, 0L)
-        store.put("testCounter", value + 1)
-        return value
+        val testClassCounters = getTestClassCounters(context)
+        return testClassCounters.testCounter.getAndIncrement()
     }
 
     private fun registerShutdownHook(extensionContext: ExtensionContext) {
-        log.debug { "Register shutdown hoot" }
+        log.debug { "Register shutdown hook" }
         val metrics = getOrCreateMetrics(extensionContext)
         Runtime.getRuntime().addShutdownHook(Thread {
             log.debug { "Saving test metrics report" }
