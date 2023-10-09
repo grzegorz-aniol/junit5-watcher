@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn" name="MyApp">
+    <Properties>
+        <Property name="pattern">%highlight{[%-5level]}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue} %d{dd-MM-yyyy HH:mm:ss.SSS} %style{[%thread]}{blue} %style{[%c{1}]}{yellow} - %m%n</Property>
+    </Properties>
+    <Appenders>
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="${pattern}"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Root level="INFO">
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+        <Logger name="org.appga.junit5watcher.BenchmarkExtension" level="DEBUG"/>
+    </Loggers>
+</Configuration>
