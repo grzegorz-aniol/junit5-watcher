@@ -9,7 +9,7 @@
         <module>java-test-example</module>
     </modules>
     <groupId>pl.appga.junit5</groupId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>junit5-watcher-parent</name>
@@ -37,7 +37,7 @@
         <connection>scm:git:git://github.com/grzegorz-aniol/junit5-watcher.git</connection>
         <developerConnection>scm:git:git@github.com:grzegorz-aniol/junit5-watcher.git</developerConnection>
         <url>https://github.com/grzegorz-aniol/junit5-watcher</url>
-      <tag>junit5-watcher-parent-1.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <properties>
