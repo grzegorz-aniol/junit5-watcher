@@ -4,12 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.appga.junit5</groupId>
+        <groupId>pl.appga.junit5</groupId>
         <artifactId>junit5-watcher-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.appga</groupId>
     <artifactId>java-test-example</artifactId>
 
     <properties>
@@ -26,7 +25,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.appga.junit5</groupId>
+            <groupId>pl.appga.junit5</groupId>
             <artifactId>junit5-watcher-ext</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>test</scope>

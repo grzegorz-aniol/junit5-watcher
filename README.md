@@ -19,7 +19,7 @@ You have to define Maven or Gradle new dependencies (in `test` scope).
 Maven dependencies:
 ```xml
 <dependency>
-    <groupId>org.appga.junit5</groupId>
+    <groupId>pl.appga.junit5</groupId>
     <artifactId>junit5-watcher-ext</artifactId>
     <version>1.0</version>
     <scope>test</scope>

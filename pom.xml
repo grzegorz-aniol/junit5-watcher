@@ -10,11 +10,36 @@
         <module>spring-boot-test-example</module>
         <module>java-test-example</module>
     </modules>
-    <groupId>org.appga.junit5</groupId>
+    <groupId>pl.appga.junit5</groupId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>junit5-watcher-parent</name>
+
+    <url>https://github.com/grzegorz-aniol/junit5-watcher</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Grzegorz Aniol</name>
+            <email>grzegorz.aniol@gmail.com</email>
+            <organization>AppGA</organization>
+            <organizationUrl>https://appga.pl/</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/grzegorz-aniol/junit5-watcher.git</connection>
+        <developerConnection>scm:git:ssh://github.com:grzegorz-aniol/junit5-watcher.git</developerConnection>
+        <url>https://github.com/grzegorz-aniol/junit5-watcher</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -27,13 +52,6 @@
         <junit.version>5.10.0</junit.version>
         <spring-boot.version>2.7.5</spring-boot.version>
     </properties>
-
-    <repositories>
-        <repository>
-            <id>mavenCentral</id>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
 
     <build>
         <pluginManagement>
@@ -112,5 +130,65 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <distributionManagement>
+                <snapshotRepository>
+                    <id>ossrh</id>
+                    <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+                </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
+            </distributionManagement>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>2.2.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.9.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

@@ -12,6 +12,6 @@
         <Root level="INFO">
             <AppenderRef ref="STDOUT"/>
         </Root>
-        <Logger name="org.appga.junit5watcher.BenchmarkExtension" level="DEBUG"/>
+        <Logger name="pl.appga.junit5watcher.BenchmarkExtension" level="DEBUG"/>
     </Loggers>
 </Configuration>
