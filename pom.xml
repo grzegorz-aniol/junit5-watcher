@@ -37,7 +37,7 @@
 
     <scm>
         <connection>scm:git:git://github.com/grzegorz-aniol/junit5-watcher.git</connection>
-        <developerConnection>scm:git:ssh://github.com:grzegorz-aniol/junit5-watcher.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:grzegorz-aniol/junit5-watcher.git</developerConnection>
         <url>https://github.com/grzegorz-aniol/junit5-watcher</url>
     </scm>
 
