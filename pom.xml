@@ -9,10 +9,11 @@
         <module>java-test-example</module>
     </modules>
     <groupId>pl.appga.junit5</groupId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>junit5-watcher-parent</name>
+    <description>Junit5 extension for detailed test metrics</description>
 
     <url>https://github.com/grzegorz-aniol/junit5-watcher</url>
 
@@ -112,6 +113,17 @@
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>3.0.1</version>
+                    <configuration>
+                        <autoVersionSubmodules>true</autoVersionSubmodules>
+                        <useReleaseProfile>false</useReleaseProfile>
+                        <releaseProfiles>release</releaseProfiles>
+                        <goals>deploy</goals>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -147,17 +159,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <version>3.0.1</version>
-                        <configuration>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <useReleaseProfile>false</useReleaseProfile>
-                            <releaseProfiles>release</releaseProfiles>
-                            <goals>deploy</goals>
-                        </configuration>
-                    </plugin>
-                    <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                         <version>1.6.13</version>
@@ -182,14 +183,19 @@
                         </executions>
                     </plugin>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                        <version>3.2.0</version>
+                        <groupId>org.jetbrains.dokka</groupId>
+                        <artifactId>dokka-maven-plugin</artifactId>
+                        <version>1.9.0</version>
+                        <configuration>
+                            <sourceDirectories>
+                                <dir>${project.basedir}/src</dir>
+                            </sourceDirectories>
+                        </configuration>
                         <executions>
                             <execution>
-                                <id>attach-javadocs</id>
+                                <phase>prepare-package</phase>
                                 <goals>
-                                    <goal>jar</goal>
+                                    <goal>dokka</goal>
                                 </goals>
                             </execution>
                         </executions>
@@ -208,6 +214,25 @@
                                 <configuration>
                                     <keyname>${gpg.keyname}</keyname>
                                     <passphrase>${gpg.passphrase}</passphrase>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>3.3.0</version>
+                        <executions>
+                            <execution>
+                                <id>dokka-jar</id>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                                <configuration>
+                                    <classifier>javadoc</classifier>
+                                    <classesDirectory>${project.build.directory}/dokka</classesDirectory>
+                                    <skipIfEmpty>true</skipIfEmpty>
                                 </configuration>
                             </execution>
                         </executions>
