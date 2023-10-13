@@ -4,7 +4,7 @@ Watcher is Junit5 extension that can measure the execution of JUnit tests and pr
 
 Detailed test metrics result is beneficial for integration tests particularly. In long-lived projects, the integration tests may take a significant part of your CI/CD pipeline. In that case, the bottleneck of your tests may be hidden in the initialization phase (e.g. `before all` or `before each` methods) which usually tends to be overlooked by developers.
 
-Some IDEs report test execution time, but provided values tend to ignore pre-/post-class callback (BeforeEach/AfterEach) and post-test callback (AfterEach). Most likely you may see only pure test execution time + pre-test callback (BeforeEach). However, some more advanced Spring Boot integration tests can spend significant time on Spring context initialization or database data prefilling.
+Some IDEs report test execution time, but provided values tend to ignore pre-/post-class callbacks. Most likely you may see value representing only pure test execution time + pre-test callback (BeforeEach). However, some more advanced Spring Boot integration tests can spend significant time on Spring context initialization or database data prefilling.
 
 This extension lets you measure not only the cumulative time of your test classes' execution time but also callbacks `before/after` triggered by other test extensions (Spring Extension particularly)
 
