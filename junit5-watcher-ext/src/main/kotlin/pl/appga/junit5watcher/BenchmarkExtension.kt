@@ -132,6 +132,7 @@ class BenchmarkExtension : BeforeAllCallback, BeforeEachCallback, AfterAllCallba
         Runtime.getRuntime().addShutdownHook(Thread {
             log.info { "Saving test metrics report" }
             CsvReportWriter(File("./test-metrics-report.csv")).write(metrics.getResults())
+            ConsoleReportWriter().write(metrics.getResults())
         })
     }
 
