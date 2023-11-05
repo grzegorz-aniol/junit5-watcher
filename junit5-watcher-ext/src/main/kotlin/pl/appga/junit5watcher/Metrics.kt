@@ -7,7 +7,7 @@ enum class MetricType { CUMULATIVE, BEFORE_ALL, BEFORE_EACH, TEST_ONLY, AFTER_EA
 
 private typealias TestResult = ConcurrentHashMap<MetricType, Duration>
 
-internal class Metrics {
+class Metrics {
     private val entries: ConcurrentHashMap<String, TestResult> = ConcurrentHashMap()
 
     fun addResult(className: String, metricType: MetricType, duration: Duration) {

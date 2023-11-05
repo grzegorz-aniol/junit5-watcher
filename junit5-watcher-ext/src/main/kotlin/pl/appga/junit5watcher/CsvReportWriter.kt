@@ -5,7 +5,7 @@ import java.io.FileOutputStream
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
 
-internal class CsvReportWriter(private val file: File) : ReportWriter {
+class CsvReportWriter(private val file: File) : ReportWriter {
 
     private val columnsOrdered = MetricType.entries
 
