@@ -82,7 +82,9 @@ class BenchmarkExtension : BeforeAllCallback, BeforeEachCallback, AfterAllCallba
         log.debug { "Test ${extensionContext.testClass.get().name} - after all" }
         val afterAllMark = timeSource.markNow()
         setTimeMark(extensionContext, MarkType.AFTER_ALL, afterAllMark)
-        measureAndSaveMetric(extensionContext, MarkType.AFTER_EACH, MarkType.AFTER_ALL, MetricType.AFTER_ALL)
+        if (getTestClassCounters(extensionContext).testCounter.get() > 0) {
+            measureAndSaveMetric(extensionContext, MarkType.AFTER_EACH, MarkType.AFTER_ALL, MetricType.AFTER_ALL)
+        }
         measureAndSaveMetric(extensionContext, MarkType.BEFORE_ALL, MarkType.AFTER_ALL, MetricType.CUMULATIVE)
     }
 
