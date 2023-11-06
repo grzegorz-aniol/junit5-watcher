@@ -60,3 +60,10 @@ CSV metrics report is generated in default directory with fixed name `test-metri
 
 ![csv-result](./docs/csv-result.png "CSV result")
 
+## Disabled classes/tests
+
+If the whole test class is disabled by JUnit annotation `@Disabled` then it's not included at all in the final report, as it's never triggered by JUnit. Otherwise, the report will for sure contain at least cumulative time metric. The existence of other metrics depends on how many tests were triggered by JUnit engine. 
+
+If a test class doesn't contain any active test, or all individual tests are disabled, then JUnit does not trigger any before/after callback. In that case the report will contain only cumulative value. However, if at least one test is executed, then before/after metrics will be measured too.
+
+The same behaviour apply to nested classes. 

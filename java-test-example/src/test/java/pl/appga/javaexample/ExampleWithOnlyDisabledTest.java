@@ -6,12 +6,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import pl.appga.junit5watcher.BenchmarkExtension;
 
 @ExtendWith(BenchmarkExtension.class)
-public class Example3WithDisabledTest {
+public class ExampleWithOnlyDisabledTest {
 
     @Disabled
     @Test
     void test1() throws InterruptedException {
-        Thread.sleep(1_000);
+        Thread.sleep(10);
     }
 
 }

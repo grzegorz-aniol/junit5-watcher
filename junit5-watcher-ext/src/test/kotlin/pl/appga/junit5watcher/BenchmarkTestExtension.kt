@@ -2,6 +2,7 @@ package pl.appga.junit5watcher
 
 import java.lang.reflect.InvocationTargetException
 import org.junit.jupiter.api.extension.AfterAllCallback
+import org.junit.jupiter.api.extension.BeforeAllCallback
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.api.extension.ParameterContext
 import org.junit.jupiter.api.extension.ParameterResolver
@@ -9,7 +10,6 @@ import org.slf4j.LoggerFactory
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.findAnnotations
-import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.valueParameters
 
 /**
@@ -19,7 +19,7 @@ import kotlin.reflect.full.valueParameters
  * - then it doesn't affect results measured by <code>BenchmarkExtension</code>
  *
  */
-internal class BenchmarkTestExtension : ParameterResolver, AfterAllCallback {
+internal class BenchmarkTestExtension : ParameterResolver, BeforeAllCallback, AfterAllCallback {
     private val log = LoggerFactory.getLogger(BenchmarkTestExtension::class.java)
     private val contextNamespace = ExtensionContext.Namespace.create(BenchmarkExtension::class.java)
 
@@ -39,6 +39,14 @@ internal class BenchmarkTestExtension : ParameterResolver, AfterAllCallback {
         }
     }
 
+    override fun beforeAll(context: ExtensionContext) {
+        // clean all metrics in BenchmarkExtension produced by previous tests
+        val contextNamespace = ExtensionContext.Namespace.create(BenchmarkExtension::class.java)
+        val store = context.root.getStore(contextNamespace)
+        store.remove(TestClassCounters::class.java)
+        store.remove(Metrics::class.java)
+    }
+
     override fun afterAll(context: ExtensionContext) {
         val companion = context.testClass.get().kotlin.companionObject
         val instance = context.testClass.get().kotlin.companionObjectInstance
@@ -51,7 +59,7 @@ internal class BenchmarkTestExtension : ParameterResolver, AfterAllCallback {
                             context.getStore(contextNamespace).get(TestClassCounters::class.java)
                         )
                     } catch (ex: InvocationTargetException) {
-                        log.error("Cannot invoke @TestFinalization annotated method", ex.cause)
+                        log.error("Error while invoking @TestFinalization method", ex.cause)
                         ex.cause?.let { throw it }
                     }
                 }
