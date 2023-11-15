@@ -21,7 +21,7 @@ Maven dependencies:
 <dependency>
     <groupId>pl.appga.junit5</groupId>
     <artifactId>junit5-watcher-ext</artifactId>
-    <version>1.1</version>
+    <version>1.2</version>
     <scope>test</scope>
 </dependency>
 ```
