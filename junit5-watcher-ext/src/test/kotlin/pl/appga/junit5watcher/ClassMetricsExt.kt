@@ -10,14 +10,17 @@ fun assertThat(classMetrics: Map<MetricType, Duration>,
                tests: Double? = null,
                afterEach: Double? = null,
                afterAll: Double? = null,
+               cumulative: Double? = null,
                tolerance: Double = 0.2) {
 
-    val actualCumulative = classMetrics.entries.filterNot { it.key == MetricType.CUMULATIVE }.sumOf { it.value.toMills() ?: 0.0 }
     val comparePrecision = Percentage.withPercentage(100.0 * tolerance)
 
+    val expectedCumulativeTime = cumulative
+        ?: (classMetrics.entries.filterNot { it.key == MetricType.CUMULATIVE }
+            .sumOf { it.value.toMills() ?: 0.0 })
     Assertions.assertThat(classMetrics[MetricType.CUMULATIVE].toMills() ?: 0.0)
         .`as`("Cumulative result")
-        .isCloseTo(actualCumulative, comparePrecision)
+        .isCloseTo(expectedCumulativeTime, comparePrecision)
 
     if (beforeAll != null) {
         Assertions.assertThat(classMetrics[MetricType.BEFORE_ALL].toMills() ?: 0.0)

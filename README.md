@@ -62,8 +62,78 @@ CSV metrics report is generated in default directory with fixed name `test-metri
 
 ## Disabled classes/tests
 
-If the whole test class is disabled by JUnit annotation `@Disabled` then it's not included at all in the final report, as it's never triggered by JUnit. Otherwise, the report will for sure contain at least cumulative time metric. The existence of other metrics depends on how many tests were triggered by JUnit engine. 
+If the whole test class is disabled by JUnit annotation `@Disabled` then it's not included at all in the final report, as it's never triggered by JUnit. Otherwise, the report will certainly contain at least a cumulative time metric. The existence of other metrics depends on how many tests were triggered by JUnit engine.
 
-If a test class doesn't contain any active test, or all individual tests are disabled, then JUnit does not trigger any before/after callback. In that case the report will contain only cumulative value. However, if at least one test is executed, then before/after metrics will be measured too.
+If a test class doesn't contain any active test, or all individual tests are disabled, then JUnit does not trigger any before/after callback. In that case, the report will contain only cumulative value. However, if at least one test is executed, then before/after metrics will be measured too.
 
-The same behaviour apply to nested classes. 
+The same behavior applies to nested classes.
+
+
+## Order of callbacks execution
+
+The schema of callback executions is as following: 
+
+* **For test class**:
+   * (1) JUnit5-watcher -> `beforeAll`
+   * Other extension -> `beforeAll` (TestExecutionListener -> `beforeTestClass`)
+   * `@BeforeAll` for test class
+     * **For every @Test**
+       * (2) JUnit5-watcher -> `beforeEach`
+       * Other extension -> `beforeEach` (TestExecutionListener -> `beforeTestMethod`)
+       * `@BeforeEach` for test
+         * (3) JUnit5-watcher -> `beforeTestExecution`
+         * **Actual test code**
+         * (4) JUnit5-watcher -> `afterTestExecution`
+       * `@AfterEach` for test
+       * Other extension -> `afterEach` (TestExecutionListener -> `afterTestMethod`)
+       * (5) JUnit5-watcher -> `afterEach`
+     * **For every @Nested test**
+       * (6) JUnit5-watcher -> `beforeAll`
+       * Other extension -> `beforeAll` (TestExecutionListener -> `beforeTestClass`)
+       * `@BeforeAll` for nested test class
+         * **For every @Test in @Nested class**
+           * (7) JUnit5-watcher -> `beforeEach`
+           * Other extension -> `beforeEach` (TestExecutionListener -> `beforeTestMethod`)
+           * `@BeforeEach` for test
+             * (8) JUnit5-watcher -> `beforeTestExecution`
+             * **Actual test code in nested class**
+             * (9) JUnit5-watcher -> `afterTestExecution`
+           * `@AfterEach` for test
+           * Other extension -> `afterEach` (TestExecutionListener -> `afterTestMethod`)
+           * (10) JUnit5-watcher -> `afterEach`
+       * `@AfterAll` for nested test class
+       * Other extension -> `afterAll` (TestExecutionListener -> `afterTestClass`)
+       * (11) JUnit5-watcher -> `afterAll`     
+   * `@AfterAll` for test class
+   * Other extension -> `afterAll` (TestExecutionListener -> `afterTestClass`)
+   * (12) JUnit5-watcher -> `afterAll`
+
+If you use Spring integration tests then `SpringExtension` allows you to define additional test callback class (implementing  `TestExecutionListener` interface). In that case `junit5-watcher` will count in the metrics time spent on these callbacks too.
+
+Nested test in the example is optional. `@BeforeAll` and `@AfterAll` callbacks for nested tests can work only with JDK16+. See [JUnit5 documentation for nested classes](https://junit.org/junit5/docs/current/user-guide/#writing-tests-nested).
+
+Metrics are calculated in the following way:
+
+* `BeforeAllMs` -> time elapsed between `(1)` and `(2)`
+* `BeforeEachMs` -> time elapsed between `(2)` and `(3)`
+* `TestOnlyMs` -> time elapsed between `(3)` and `(4)`
+* `AfterEachMs` -> time elapsed between `(4)` and `(5)`
+* `AfterAllMs` -> time elapsed between last call to `(5)` and `(12)` (or `(11)` and `(12)` if nested class is used)
+* `CumulativeMs` -> time elapsed between `(1)` and `(12)`
+
+A similar approach is used for calculating metrics for nested classes using time marks starting `(6)` up to `(11)`.
+
+In rare situations, every individual test in a class may be disabled. In that case, callback `before/after each` test won't be triggered. The extension should handle this case properly and measure just `before/after all` callbacks.
+
+## Test cumulative value
+
+The cumulative time value for every enclosing class matches the following formula:
+
+* **Cumulative time** = Before All + Before Each + Test time + After Each + After All + *(Nested classes cumulative time)* + ***DELTA***
+
+  * where ***DELTA*** represents the additional time spent in between callbacks (mostly JUnit5 internal processing or other)
+
+
+The formula is explained visually in this picture:
+
+![csv-result](./docs/nested-classes-metrics.png "Nested classes metrics")

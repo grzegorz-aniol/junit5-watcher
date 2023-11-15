@@ -7,7 +7,7 @@ enum class MetricType { CUMULATIVE, BEFORE_ALL, BEFORE_EACH, TEST_ONLY, AFTER_EA
 
 private typealias TestResult = ConcurrentHashMap<MetricType, Duration>
 
-class Metrics {
+object Metrics {
     private val entries: ConcurrentHashMap<String, TestResult> = ConcurrentHashMap()
 
     fun addResult(className: String, metricType: MetricType, duration: Duration) {
@@ -17,5 +17,9 @@ class Metrics {
 
     fun getResults(): Iterable<Pair<String, Map<MetricType, Duration>>> {
         return entries.asIterable().map { it.key to it.value }
+    }
+
+    fun clear() {
+        entries.clear()
     }
 }
