@@ -1,5 +1,9 @@
 # Junit5 Watcher Extension
 
+![Maven Central](https://img.shields.io/maven-central/v/pl.appga.junit5/junit5-watcher-ext)
+
+---
+
 Watcher is Junit5 extension that can measure the execution of JUnit tests and provides detailed metrics, for different test stages  (`before/after`, `all/each`). The metrics report is the first thing you may want to do before optimizing the time of execution of your test suite.
 
 Detailed test metrics result is beneficial for integration tests particularly. In long-lived projects, the integration tests may take a significant part of your CI/CD pipeline. In that case, the bottleneck of your tests may be hidden in the initialization phase (e.g. `before all` or `before each` methods) which usually tends to be overlooked by developers.
