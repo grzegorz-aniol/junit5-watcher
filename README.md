@@ -60,7 +60,7 @@ If the extension is defined in a declarative way, please make sure the Watcher i
 Watcher Extension generates the metrics report on process shutdown. At this moment CSV file format is supported only.
 
 ### CSV Report
-CSV metrics report is generated in default directory with fixed name `test-metrics-report.csv`
+CSV metrics report is generated in current working directory with fixed name `test-metrics-report.csv`
 
 ![csv-result](./docs/csv-result.png "CSV result")
 
